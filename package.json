@@ -1,0 +1,35 @@
+{
+  "name": "github-commits-watcher",
+  "author": {
+    "name": "George Oliveira",
+    "email": "ghao@cin.ufpe.br"
+  },
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "lint": "eslint ./",
+    "build-client": "npm run --prefix client build",
+    "build-server": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./client,./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "build": "npm run build-client && npm run buid-server",
+    "prestart": "npm run lint",
+    "start": "npm run build && node dist/bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "mongoose": "^5.0.17",
+    "morgan": "~1.9.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "eslint": "^4.19.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-react": "^7.7.0",
+    "rimraf": "^2.6.2"
+  }
+}
