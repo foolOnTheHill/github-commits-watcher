@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const errors = require('restify-errors');
 
 const config = require('../config/config');
 
@@ -10,7 +11,7 @@ const sign = (data) => {
 
 const verify = (token) => {
 	return jwt.verify(token, config.JWT_SECRET, (err, data) => {
-		if (err) { throw err; }
+		if (err) { throw new errors.UnauthorizedError('Invalid token'); }
 		return data;
 	});
 };
