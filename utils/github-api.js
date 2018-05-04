@@ -18,7 +18,7 @@ const getUserProfile = (token) => {
 };
 
 const getRepoInfo = (token, owner, repo_name) => {
-	const endpoint = `ENDPOINTS.repository/${owner}/${repo_name}`;
+	const endpoint = `${ENDPOINTS.repository}/${owner}/${repo_name}`;
 
 	return request('GET', endpoint, token).then(data => {
 		let { full_name, description, created_at } = data;
@@ -32,7 +32,7 @@ const getRepoInfo = (token, owner, repo_name) => {
 };
 
 const getRepoLastMonthCommits = (token, owner, repo_name) => {
-	const endpoint = `ENDPOINTS.repository/${owner}/${repo_name}/commits`;
+	const endpoint = `${ENDPOINTS.repository}/${owner}/${repo_name}/commits`;
 	const qs = { since : lastMonth() };
 
 	return request('GET', endpoint, token, qs).then(data => {
