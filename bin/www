@@ -4,37 +4,11 @@
  * Module dependencies.
  */
 
-const connect = require('../database/connect');
+const connectDb = require('../database/connect');
+
 const app = require('../app');
 const debug = require('debug')('server:server');
 const http = require('http');
-
-/**
- * Connects to MongoDB database.
- */
-
-connect();
-
-/**
- * Get port from environment and store in Express.
- */
-
-const port = normalizePort(process.env.PORT || '8080');
-app.set('port', port);
-
-/**
- * Create HTTP server.
- */
-
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -95,3 +69,32 @@ const onListening = () => {
 		: 'port ' + addr.port;
 	debug('Listening on ' + bind);
 };
+
+/**
+ * Connects to MongoDB database.
+ */
+
+connectDb();
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+const port = normalizePort(process.env.PORT || '8080');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+const server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+debug(`App running on port ${port}`);
