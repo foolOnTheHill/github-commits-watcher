@@ -11,7 +11,7 @@ const create = require('../database/dal/create');
 const find = require('../database/dal/find');
 
 router.get('/commits', (req, res, next) => {
-	const token_param = req.query.token;
+	const token_param = req.session.user.token;
 
 	if (!token_param) { next(new errors.BadRequestError('Missing token')); }
 
@@ -26,7 +26,7 @@ router.get('/commits', (req, res, next) => {
 });
 
 router.post('/repositories', (req, res, next) => {
-	const token_param = req.query.token;
+	const token_param = req.session.user.token;
 
 	if (!token_param) { next(new errors.BadRequestError('Missing token')); }
 
@@ -60,7 +60,7 @@ router.post('/repositories', (req, res, next) => {
 });
 
 router.get('/repositories/:repository/commits', (req, res, next) => {
-	const token_param = req.query.token;
+	const token_param = req.session.user.token;
 
 	if (!token_param) { next(new errors.BadRequestError('Missing token')); }
 
@@ -77,7 +77,7 @@ router.get('/repositories/:repository/commits', (req, res, next) => {
 });
 
 router.get('/repositories', (req, res, next) => {
-	const token_param = req.query.token;
+	const token_param = req.session.user.token;
 
 	if (!token_param) { next(new errors.BadRequestError('Missing token')); }
 

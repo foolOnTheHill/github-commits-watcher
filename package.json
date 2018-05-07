@@ -10,9 +10,9 @@
     "lint": "eslint ./",
     "build-client": "npm run --prefix client build",
     "build-server": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./client,./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "build": "npm run build-client && npm run buid-server",
+    "build": "npm run build-server && npm run build-client",
     "prestart": "npm run lint",
-    "start": "npm run build-server && node dist/bin/www"
+    "start": "npm run build && node dist/bin/www"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",
@@ -20,6 +20,7 @@
     "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-session": "^1.15.6",
     "github-oauth": "^0.2.2",
     "http-errors": "~1.6.2",
     "jsonwebtoken": "^8.2.1",

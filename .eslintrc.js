@@ -33,6 +33,7 @@ module.exports = {
             "always"
         ],
 				"react/jsx-uses-vars": 2,
+				"react/react-in-jsx-scope": "off",
 				"no-console": ["error", { allow: ["warn", "error"] }]
     }
 };

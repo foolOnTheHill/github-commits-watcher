@@ -35,20 +35,24 @@ export default class AddRepo extends Component {
 
 	render() {
 		return (
-			<div>
-				<p>Type a repo full name and hit 'Go':</p>
+			<div className="container">
+				<div className="row justify-content-center">
+					<div className="col-8">
+						<p>Type a repo full name and hit 'Add' to start listing commits:</p>
 
-				<div>
-					<div className="form-group">
-						<input
-							type="text"
-							className="form-control"
-							placeholder="reactjs/redux"
-							ref={(input) => this.input = input}
-							defaultValue={this.props.value}
-							onKeyUp={this.handleKeyUp} />
+						<div>
+							<div className="form-group">
+								<input
+									type="text"
+									className="form-control"
+									placeholder="reactjs/redux"
+									ref={(input) => this.input = input}
+									defaultValue={this.props.value}
+									onKeyUp={this.handleKeyUp} />
+							</div>
+							<button className="btn btn-primary" onClick={this.handleGoClick}>Add</button>
+						</div>
 					</div>
-					<button className="btn btn-primary" onClick={this.handleGoClick}>Add</button>
 				</div>
 			</div>
 		);

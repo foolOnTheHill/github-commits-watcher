@@ -1,5 +1,3 @@
-const errors = require('restify-errors');
-
 const User = require('../models/user');
 const Repository = require('../models/repository');
 const Commit = require('../models/commit');
@@ -9,8 +7,6 @@ const findOneUser = (params) => {
 		User.findOne({login: params}).exec((err, user) => {
 			if (err) { reject(err); }
 
-			if (!user) { throw new errors.UnauthorizedError('Current user not found'); }
-
 			resolve(user);
 		});
 	});
@@ -18,7 +14,7 @@ const findOneUser = (params) => {
 
 const findAllRepositories = (params) => {
 	return new Promise((resolve, reject) => {
-		Repository.find(params).exec((err, repositories) => {
+		Repository.find(params).populate('owner').exec((err, repositories) => {
 			if (err) { reject(err); }
 
 			repositories = repositories || [];
@@ -30,7 +26,7 @@ const findAllRepositories = (params) => {
 
 const findOneRepository = (params) => {
 	return new Promise((resolve, reject) => {
-		Repository.findOne(params).exec((err, repositories) => {
+		Repository.findOne(params).populate('owner').exec((err, repositories) => {
 			if (err) { reject(err); }
 
 			resolve(repositories);
@@ -40,7 +36,7 @@ const findOneRepository = (params) => {
 
 const findAllCommits = (params) => {
 	return new Promise((resolve, reject) => {
-		Commit.find(params).exec((err, commits) => {
+		Commit.find(params).populate('repository').exec((err, commits) => {
 			if (err) { reject(err); }
 
 			commits = commits || [];

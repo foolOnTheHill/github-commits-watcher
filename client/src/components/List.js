@@ -12,9 +12,15 @@ const List = ({ commits, onClick }) => {
 	});
 
 	return (
-		<ul className="list-group">
-			{ commitComponentsList }
-		</ul>
+		<div className="container">
+			<div className="row justify-content-center">
+				<div className="col-8">
+					<ul className="list-group">
+						{ commitComponentsList }
+					</ul>
+				</div>
+			</div>
+		</div>
 	);
 };
 

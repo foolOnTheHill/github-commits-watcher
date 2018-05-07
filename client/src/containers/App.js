@@ -7,6 +7,10 @@ import {
 	fetchCommitsIfNeeded
 } from '../actions';
 
+import Header from '../components/Header';
+import Loading from '../components/Loading';
+import Error from '../components/Error';
+
 import AddRepo from '../components/AddRepo';
 import List from '../components/List';
 
@@ -42,33 +46,21 @@ class App extends Component {
 
 		let child;
 		if (isFetching) {
-			child = <p>Loading...</p>;
+			child = <Loading />;
 		} else if (loadError) {
-			child = <p>Error while loading data</p>;
+			child = <Error message={'Error while loading data'} />;
 		} else {
 			child = <List commits={commits} onClick={this.handleEvents} />;
 		}
 
 		return (
 			<div>
-				<div className="jumbotron">
-					<h4 className="display-4 text-center">GitHub Commits Watcher</h4>
-					<p className="lead text-center">Quickly list your repositories commits!</p>
-				</div>
-
-				<div className="container">
-					<div className="row justify-content-center">
-						<div className="col-8">
-							<AddRepo
-								value={selectedRepo}
-								onChange={this.handleEvents} />
-							<hr />
-							{ child }
-						</div>
-					</div>
-				</div>
-
-
+				<Header />
+				<AddRepo
+					value={selectedRepo}
+					onChange={this.handleEvents} />
+				<hr />
+				{ child }
 			</div>
 		);
 	}

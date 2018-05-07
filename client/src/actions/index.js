@@ -45,9 +45,7 @@ const fetchCommits = (repo = 'all') => {
 			endpoint = '/commits';
 		}
 
-		const token = localStorage.getItem('token');
-
-		const url = `${endpoint}?token=${token}`;
+		const url = endpoint;
 
 		return fetch(url).then(response => response.json()).then(data => {
 			dispatch(receiveCommits(repo, data));
