@@ -17,12 +17,10 @@ const find = require('../database/dal/find');
 
 const config = require('../config/config');
 
-const port = process.env.PORT || 8080;
-
 const githubOAuth = require('github-oauth')({
 	githubClient: config.GITHUB_KEY,
 	githubSecret: config.GITHUB_SECRET,
-	baseURL: `http://localhost:${port}`,
+	baseURL: 'https://morning-shelf-22723.herokuapp.com',
 	loginURI: '/',
 	callbackURI: '/login/redirect'
 });

@@ -19,12 +19,10 @@ var find = require('../database/dal/find');
 
 var config = require('../config/config');
 
-var port = process.env.PORT || 8080;
-
 var githubOAuth = require('github-oauth')({
 	githubClient: config.GITHUB_KEY,
 	githubSecret: config.GITHUB_SECRET,
-	baseURL: 'http://localhost:' + port,
+	baseURL: 'https://morning-shelf-22723.herokuapp.com',
 	loginURI: '/',
 	callbackURI: '/login/redirect'
 });
