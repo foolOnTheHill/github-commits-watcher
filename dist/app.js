@@ -5,12 +5,7 @@ var express = require('express');
 var cors = require('cors');
 var path = require('path');
 
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
-
 var bodyParser = require('body-parser');
-
-var cookieChecker = require('./middleware/cookie-checker');
 
 var logger = require('morgan');
 
@@ -28,27 +23,13 @@ app.use(cors({ origin: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(cookieParser());
-
-app.use(session({
-	key: 'token',
-	secret: 'my_secret',
-	resave: true,
-	saveUninitialized: false,
-	cookie: {
-		expires: new Date(Date.now() + 60 * 60 * 1000)
-	}
-}));
-
-app.use(cookieChecker);
-
-app.use(express.static(path.join(__dirname, '/dist/build')));
+app.use(express.static(path.join(__dirname, '/build')));
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
 app.get('*', function (req, res) {
-	res.sendFile(path.join(__dirname, '/dist/build', 'index.html'));
+	res.sendFile(path.join(__dirname, '/build', 'index.html'));
 });
 
 // catch 404 and forward to error handler

@@ -7,8 +7,6 @@ var errors = require('restify-errors');
 
 var request = require('request-promise');
 
-var sessionChecker = require('../middleware/session-checker');
-
 var api = require('../utils/github-api');
 
 var jwt = require('../utils/jwt');
@@ -27,11 +25,11 @@ var githubOAuth = require('github-oauth')({
 	callbackURI: '/login/redirect'
 });
 
-router.get('/', sessionChecker, function (req, res) {
+router.get('/', function (req, res) {
 	return githubOAuth.login(req, res);
 });
 
-router.post('/', sessionChecker, function (req, res) {
+router.post('/', function (req, res) {
 	var _req$body = req.body,
 	    code = _req$body.code,
 	    state = _req$body.state;
@@ -80,8 +78,6 @@ router.post('/', sessionChecker, function (req, res) {
 					user: profile,
 					token: oauth
 				};
-
-				req.session.user = token;
 
 				res.send(token);
 			});
