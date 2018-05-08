@@ -40,13 +40,13 @@ app.use(session({
 
 app.use(cookieChecker);
 
-app.use(express.static(path.join(__dirname, '/dist/build')));
+app.use(express.static(path.join(__dirname, '/build')));
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '/dist/build', 'index.html'));
+	res.sendFile(path.join(__dirname, '/build', 'index.html'));
 });
 
 // catch 404 and forward to error handler
