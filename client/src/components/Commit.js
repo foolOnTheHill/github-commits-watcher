@@ -1,20 +1,32 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types';
 
-const Commit = ({ commit, onClick }) => {
-	let { hash, message, author, date, repository } = commit;
+import * as moment from 'moment';
+
+const Commit = ({ login, commit, onClick }) => {
+
+	let { message, author, date, repository } = commit;
 
 	const handleClick = () => {
-		onClick(repository.name);
+		const repoFullName = `${login}/${repository.name}`;
+
+		onClick(repoFullName);
 	};
 
+	const prettyDate = moment(date).format('L');
+
 	return (
-		<div className="card">
-			<div className="card-body">
-				<h6 className="card-subtitle mb-2 text-muted">{author} - {date}</h6>
-				<p className="card-text">{ message }</p>
-				<a className="card-link">{ hash }</a>
-				<a clasNames="card-link" onClick={handleClick}>{ repository.name }</a>
+		<div>
+			<br />
+			<div className="card">
+				<div className="card-header">
+					{prettyDate}
+				</div>
+				<div className="card-body">
+					<h5 className="card-title">{author}</h5>
+					<p className="card-text">{message}</p>
+					<a className="btn btn-primary" onClick={handleClick}>{repository.name}</a>
+				</div>
 			</div>
 		</div>
 	);

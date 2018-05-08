@@ -1,12 +1,14 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import PropTypes from 'prop-types';
+
 import Commit from './Commit';
 
-const List = ({ commits, onClick }) => {
+const List = ({ user, commits, onClick }) => {
+
 	const commitComponentsList = commits.map(commit => {
 		return (
-			<li>
-				<Commit commit={commit} onClick={onClick}/>
+			<li className="list-group">
+				<Commit login={user.login} commit={commit} onClick={onClick}/>
 			</li>
 		);
 	});

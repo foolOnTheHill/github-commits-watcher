@@ -1,11 +1,18 @@
 import {
+	LOG_OUT,
 	SELECT_REPO,
 	RECEIVE_COMMITS,
 	REQUEST_COMMITS,
-	LOAD_ERROR
+	LOAD_ERROR,
+	REQUEST_ADDING_REPO,
+	FINISHED_ADDING_REPO,
+	ERROR_ADDING_REPO
 } from '../actions';
 
 const initialState = {
+	loggedIn: true,
+	addingRepo: false,
+	addingError: false,
 	selectedRepo: 'all',
 	commitsByRepo: {
 		all: {
@@ -58,6 +65,22 @@ const rootReducer = (state = initialState, action) => {
 	case SELECT_REPO:
 		return Object.assign({}, state, {
 			selectedRepo: action.repo
+		});
+	case REQUEST_ADDING_REPO:
+		return Object.assign({}, state, {
+			addingRepo: true
+		});
+	case FINISHED_ADDING_REPO:
+		return Object.assign({}, state, {
+			addingRepo: false
+		});
+	case ERROR_ADDING_REPO:
+		return Object.assign({}, state, {
+			addingError: true
+		});
+	case LOG_OUT:
+		return Object.assign({}, state, {
+			loggedIn: false
 		});
 	default:
 		return state;

@@ -3,6 +3,8 @@ const router = express.Router();
 
 const errors = require('restify-errors');
 
+const request = require('request-promise');
+
 const sessionChecker = require('../middleware/session-checker');
 
 const api = require('../utils/github-api');
@@ -21,13 +23,33 @@ const githubOAuth = require('github-oauth')({
 	githubClient: config.GITHUB_KEY,
 	githubSecret: config.GITHUB_SECRET,
 	baseURL: `http://localhost:${port}`,
-	loginURI: '/auth',
-	callbackURI: '/auth/redirect'
+	loginURI: '/',
+	callbackURI: '/login/redirect'
 });
 
-const generateTokenHandler = (req) => {
-	const handler = (token, res) => {
-		const access_token = token.access_token;
+router.get('/', sessionChecker, (req, res) => {
+	return githubOAuth.login(req, res);
+});
+
+router.post('/', sessionChecker, (req, res) => {
+	let { code, state } = req.body;
+
+	request({
+		method: 'POST',
+		uri: 'https://github.com/login/oauth/access_token',
+		body: {
+			client_id: config.GITHUB_KEY,
+			client_secret: config.GITHUB_SECRET,
+			code: code,
+			state: state
+		},
+		headers: {
+			'Accept': 'application/json'
+		},
+		json: true
+	}).then(result => {
+
+		const access_token = result.access_token;
 
 		api.getUserProfile(access_token).then(profile => {
 
@@ -48,35 +70,19 @@ const generateTokenHandler = (req) => {
 					name
 				});
 
-				req.session.user = {
+				const token = {
 					user: profile,
 					token: oauth
 				};
 
-				res.redirect('/app');
+				req.session.user = token;
+
+				res.send(token);
 			});
-
-		}).catch(err => {
-			throw new errors.InternalServerError(err);
 		});
-	};
-
-	return handler;
-};
-
-router.get('/', sessionChecker, function(req, res) {
-	return githubOAuth.login(req, res);
-});
-
-router.get('/redirect', sessionChecker, function(req, res) {
-	githubOAuth.on('token', generateTokenHandler(req));
-
-	return githubOAuth.callback(req, res);
-});
-
-githubOAuth.on('error', function(err) {
-	console.error('there was a login error', err);
-	throw new errors.UnauthorizedError(err);
+	}).catch(error => {
+		throw new errors.UnauthorizedError(error);
+	});
 });
 
 module.exports = router;

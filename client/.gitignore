@@ -1,4 +1,4 @@
 /node_modules
-/store/configStore.dev.js
-/store/configStore.prod.js
+/config/config.dev.js
+/config/config.prod.js
 /build

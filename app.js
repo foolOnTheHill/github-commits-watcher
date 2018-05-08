@@ -6,8 +6,9 @@ const path = require('path');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
+const bodyParser = require('body-parser');
+
 const cookieChecker = require('./middleware/cookie-checker');
-const sessionChecker = require('./middleware/session-checker');
 
 const logger = require('morgan');
 
@@ -15,6 +16,8 @@ const apiRouter = require('./routes/api');
 const authRouter = require('./routes/auth');
 
 const app = express();
+
+app.use(bodyParser.json());
 
 app.use(logger('dev'));
 
@@ -28,7 +31,7 @@ app.use(cookieParser());
 app.use(session({
 	key: 'token',
 	secret: 'my_secret',
-	resave: false,
+	resave: true,
 	saveUninitialized: false,
 	cookie: {
 		expires: new Date(Date.now() + 60 * 60 * 1000)
@@ -37,19 +40,13 @@ app.use(session({
 
 app.use(cookieChecker);
 
-app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/build')));
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
 
-app.get('/app', (req, res) => {
+app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '/build', 'index.html'));
-});
-
-// catchall handler
-app.get('*', sessionChecker, (req, res) => {
-	res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 
 // catch 404 and forward to error handler

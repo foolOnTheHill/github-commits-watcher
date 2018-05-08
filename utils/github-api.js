@@ -28,6 +28,8 @@ const getRepoInfo = (token, owner, repo_name) => {
 			created_date: created_at,
 			description
 		};
+	}).catch(error => {
+		console.error(error);
 	});
 };
 
@@ -53,6 +55,8 @@ const getRepoLastMonthCommits = (token, owner, repo_name) => {
 				message
 			};
 		});
+	}).catch(error => {
+		console.error(error);
 	});
 };
 

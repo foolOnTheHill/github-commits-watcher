@@ -10,9 +10,11 @@ const sign = (data) => {
 };
 
 const verify = (token) => {
-	return jwt.verify(token, config.JWT_SECRET, (err, data) => {
-		if (err) { throw new errors.UnauthorizedError('Invalid token'); }
-		return data;
+	return new Promise((resolve, reject) => {
+		jwt.verify(token, config.JWT_SECRET, (err, data) => {
+			if (err) { reject(new errors.UnauthorizedError('Invalid token')); }
+			resolve(data);
+		});
 	});
 };
 

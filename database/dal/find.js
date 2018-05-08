@@ -26,10 +26,10 @@ const findAllRepositories = (params) => {
 
 const findOneRepository = (params) => {
 	return new Promise((resolve, reject) => {
-		Repository.findOne(params).populate('owner').exec((err, repositories) => {
+		Repository.findOne(params).populate('owner').exec((err, repository) => {
 			if (err) { reject(err); }
 
-			resolve(repositories);
+			resolve(repository);
 		});
 	});
 };
@@ -60,13 +60,27 @@ const findRepositoryCommits = (login, repo) => {
 	});
 };
 
+const checkRepositoryExists = (login, repo) => {
+	return findOneUser(login).then(user => {
+		return findOneRepository({owner: user._id, name: repo});
+	}).then(repository => {
+		if (repository) {
+			return true;
+		}  else {
+			return false;
+		}
+	});
+};
+
 const findUserCommits = (login) => {
 	return findOneUser(login).then(user => {
 		return findAllRepositories({owner: user._id});
 	}).then(repositories => {
 		return Promise.all(repositories.map(repo => {
 			return findAllCommits({repository: repo._id});
-		}));
+		})).then(data => {
+			return [].concat(...data);
+		});
 	});
 };
 
@@ -74,5 +88,6 @@ module.exports = {
 	findOneUser,
 	findUserRepositories,
 	findUserCommits,
-	findRepositoryCommits
+	findRepositoryCommits,
+	checkRepositoryExists
 };
