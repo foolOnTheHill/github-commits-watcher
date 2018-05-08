@@ -3,12 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
-
 const bodyParser = require('body-parser');
-
-const cookieChecker = require('./middleware/cookie-checker');
 
 const logger = require('morgan');
 
@@ -25,20 +20,6 @@ app.use(cors({origin: true}));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-
-app.use(cookieParser());
-
-app.use(session({
-	key: 'token',
-	secret: 'my_secret',
-	resave: true,
-	saveUninitialized: false,
-	cookie: {
-		expires: new Date(Date.now() + 60 * 60 * 1000)
-	}
-}));
-
-app.use(cookieChecker);
 
 app.use(express.static(path.join(__dirname, '/build')));
 

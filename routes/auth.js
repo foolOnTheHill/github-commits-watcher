@@ -5,8 +5,6 @@ const errors = require('restify-errors');
 
 const request = require('request-promise');
 
-const sessionChecker = require('../middleware/session-checker');
-
 const api = require('../utils/github-api');
 
 const jwt = require('../utils/jwt');
@@ -25,11 +23,11 @@ const githubOAuth = require('github-oauth')({
 	callbackURI: '/login/redirect'
 });
 
-router.get('/', sessionChecker, (req, res) => {
+router.get('/', (req, res) => {
 	return githubOAuth.login(req, res);
 });
 
-router.post('/', sessionChecker, (req, res) => {
+router.post('/', (req, res) => {
 	let { code, state } = req.body;
 
 	request({
@@ -72,8 +70,6 @@ router.post('/', sessionChecker, (req, res) => {
 					user: profile,
 					token: oauth
 				};
-
-				req.session.user = token;
 
 				res.send(token);
 			});
