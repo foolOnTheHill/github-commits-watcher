@@ -17,7 +17,6 @@
 .env.production.local
 
 /config/config.dev.js
-/config/config.prod.js
 
 npm-debug.log*
 yarn-debug.log*
