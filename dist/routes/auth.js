@@ -20,8 +20,8 @@ var config = require('../config/config');
 var githubOAuth = require('github-oauth')({
 	githubClient: config.GITHUB_KEY,
 	githubSecret: config.GITHUB_SECRET,
-	baseURL: 'http://localhost:8080', // 'https://morning-shelf-22723.herokuapp.com',
-	loginURI: '/authenticate',
+	baseURL: 'https://morning-shelf-22723.herokuapp.com',
+	loginURI: '/',
 	callbackURI: '/login/redirect'
 });
 
