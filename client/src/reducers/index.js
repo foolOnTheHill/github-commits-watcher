@@ -104,7 +104,9 @@ const rootReducer = (state = initialState, action) => {
 			loggedIn: true
 		});
 	case LOG_OUT:
-		return Object.assign({}, state, initialState);
+		return Object.assign({}, state, {
+			loggedIn: false
+		});
 	default:
 		return state;
 	}
