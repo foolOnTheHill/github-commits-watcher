@@ -60,6 +60,8 @@ router.post('/repositories', (req, res, next) => {
 						}));
 					});
 				}).then(() => {
+					return api.createHook(access_token, owner, repository);
+				}).then(() => {
 					res.status(200).end();
 				}).catch(error => {
 					console.error(error);

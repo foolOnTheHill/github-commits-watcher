@@ -7,11 +7,12 @@ const prepareURL = (endpoint) => {
 	return `${API_BASE_URL}/${endpoint}`;
 };
 
-const prepareOptions = (token, uri, method, qs) => {
+const prepareOptions = (token, uri, method, qs, body) => {
 	return {
 		method,
 		uri,
 		qs,
+		body,
 		headers: {
 			'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36',
 			'Authorization': `token ${token}`
@@ -20,9 +21,9 @@ const prepareOptions = (token, uri, method, qs) => {
 	};
 };
 
-module.exports = (method='GET', endpoint, token, qs={}) => {
+module.exports = (method='GET', endpoint, token, qs={}, body={}) => {
 	const url = prepareURL(endpoint);
-	const options = prepareOptions(token, url, method, qs);
+	const options = prepareOptions(token, url, method, qs, body);
 
 	return request(options);
 };

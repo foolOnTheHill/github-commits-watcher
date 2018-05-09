@@ -4,6 +4,8 @@ const lastMonth = require('../utils/last-month');
 
 const ENDPOINTS = require('../utils/endpoints');
 
+const config = require('../config/config');
+
 const getUserProfile = (token) => {
 	return request('GET', ENDPOINTS.profile, token).then(data => {
 		let { login, avatar_url, email, name } = data;
@@ -60,8 +62,28 @@ const getRepoLastMonthCommits = (token, owner, repo_name) => {
 	});
 };
 
+const createHook = (token, owner, repo_name) => {
+	const endpoint = `${ENDPOINTS.repository}/${owner}/${repo_name}/hooks`;
+	const body = {
+		name: 'web',
+		active: true,
+		events: [
+			'push'
+		],
+		config: {
+			url: `${config.APP_URL}/hook`,
+			content_type: 'json'
+		}
+	};
+
+	return request('POST', endpoint, token, {}, body).catch(error => {
+		console.error(error);
+	});
+};
+
 module.exports = {
 	getUserProfile,
 	getRepoInfo,
-	getRepoLastMonthCommits
+	getRepoLastMonthCommits,
+	createHook
 };

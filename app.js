@@ -9,6 +9,7 @@ const logger = require('morgan');
 
 const apiRouter = require('./routes/api');
 const authRouter = require('./routes/auth');
+const hookRouter = require('./routes/hook');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, '/build')));
 
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
+app.use('/hook', hookRouter);
 
 app.get('*', (req, res) => {
 	res.sendFile(path.join(__dirname, '/build', 'index.html'));
