@@ -18,6 +18,7 @@ import Loading from '../components/Loading';
 import Error from '../components/Error';
 import AddRepo from '../components/AddRepo';
 import List from '../components/List';
+import SelectRepo from '../components/SelectRepo';
 
 class App extends Component {
 	constructor (props) {
@@ -82,6 +83,10 @@ class App extends Component {
 					value={selectedRepo}
 					onClick={this.handleAddEvents} />
 				<hr />
+				<SelectRepo
+					repositories={this.props.repositories}
+					onChange={this.handleSelectEvents} />
+				<hr />
 				{ child }
 			</div>
 		);
@@ -117,6 +122,10 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const fetchingRepos = state.fetchingRepos;
+	const errorFetchingRepos = state.errorFetchingRepos;
+	const repositories = state.repositories;
+
 	const addingRepo = state.addingRepo;
 	const addingError = state.addingError;
 	const selectedRepo = state.selectedRepo;
@@ -124,11 +133,14 @@ const mapStateToProps = (state) => {
 
 	const loggedIn = state.loggedIn;
 
-	const repoCommits = commitsByRepo[selectedRepo] || { isFetching: false, commits: []};
+	const repoCommits = commitsByRepo[selectedRepo] || { isFetching: false, loadError: false, commits: []};
 
 	let { isFetching, loadError, commits } = repoCommits;
 
 	return {
+		fetchingRepos,
+		errorFetchingRepos,
+		repositories,
 		loggedIn,
 		addingRepo,
 		addingError,

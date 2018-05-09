@@ -43,29 +43,32 @@ router.post('/repositories', (req, res, next) => {
 
 		const access_token = token.access_token;
 
-		return api.checkRepositoryExists(owner, repository).then(exists => {
+		return find.checkRepositoryExists(login, repository).then(exists => {
 			if (exists) {
 				res.status(200).end();
-			}
-		}).then(() => {
-			return Promise.all([
-				api.getRepoInfo(access_token, owner, repository),
-				api.getRepoLastMonthCommits(access_token, owner, repository)
-			]);
-		}).then(([repoInfo, commits]) => {
-			let {description, created_date} = repoInfo;
+				return;
+			} else {
+				return Promise.all([
+					api.getRepoInfo(access_token, owner, repository),
+					api.getRepoLastMonthCommits(access_token, owner, repository)
+				]).then(([repoInfo, commits]) => {
+					let {description, created_date} = repoInfo;
 
-			return create.newRepository(login, repository, description, created_date).then(() => {
-				return Promise.all(commits.map(commit => {
-					return create.newCommit(login, repository, commit.date, commit.message, commit.author, commit.hash);
-				}));
-			});
-		}).then(() => {
-			res.status(200).end();
-		}).catch(error => {
-			next(new errors.InternalServerError(error));
+					return create.newRepository(login, repository, description, created_date).then(() => {
+						return Promise.all(commits.map(commit => {
+							return create.newCommit(login, repository, commit.date, commit.message, commit.author, commit.hash);
+						}));
+					});
+				}).then(() => {
+					res.status(200).end();
+				}).catch(error => {
+					console.error(error);
+					next(new errors.InternalServerError(error));
+				});
+			}
 		});
 	}).catch(error => {
+		console.error(error);
 		next(new errors.UnauthorizedError(error));
 	});
 });

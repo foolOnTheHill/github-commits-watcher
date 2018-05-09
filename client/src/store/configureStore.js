@@ -3,7 +3,8 @@ import thunkMiddleware from 'redux-thunk';
 import rootReducer from '../reducers';
 
 import {
-	selectRepo
+	selectRepo,
+	loadRepos
 } from '../actions';
 
 const configureStore = (preloadedState) => {
@@ -14,6 +15,7 @@ const configureStore = (preloadedState) => {
 		applyMiddleware(thunkMiddleware)
 	);
 
+	store.dispatch(loadRepos());
 	store.dispatch(selectRepo('all'));
 
 	return store;

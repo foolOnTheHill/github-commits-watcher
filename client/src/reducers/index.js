@@ -1,4 +1,5 @@
 import {
+	LOG_IN,
 	LOG_OUT,
 	SELECT_REPO,
 	RECEIVE_COMMITS,
@@ -6,14 +7,20 @@ import {
 	LOAD_ERROR,
 	REQUEST_ADDING_REPO,
 	FINISHED_ADDING_REPO,
-	ERROR_ADDING_REPO
+	ERROR_ADDING_REPO,
+	FETCHING_REPOS,
+	RECEIVE_REPOS,
+	ERROR_RECEIVING_REPOS
 } from '../actions';
 
 const initialState = {
-	loggedIn: true,
+	loggedIn: false,
 	addingRepo: false,
 	addingError: false,
+	fetchingRepos: false,
+	errorFetchingRepos: false,
 	selectedRepo: 'all',
+	repositories: [],
 	commitsByRepo: {
 		all: {
 			isFetching: false,
@@ -54,6 +61,19 @@ const commits = (
 
 const rootReducer = (state = initialState, action) => {
 	switch (action.type) {
+	case FETCHING_REPOS:
+		return Object.assign({}, state, {
+			fetchingRepos: true
+		});
+	case RECEIVE_REPOS:
+		return Object.assign({}, state, {
+			fetchingRepos: false,
+			repositories: action.repos
+		});
+	case ERROR_RECEIVING_REPOS:
+		return Object.assign({}, state, {
+			errorFetchingRepos: true
+		});
 	case LOAD_ERROR:
 	case REQUEST_COMMITS:
 	case RECEIVE_COMMITS:
@@ -72,16 +92,19 @@ const rootReducer = (state = initialState, action) => {
 		});
 	case FINISHED_ADDING_REPO:
 		return Object.assign({}, state, {
-			addingRepo: false
+			addingRepo: false,
+			addingError: false
 		});
 	case ERROR_ADDING_REPO:
 		return Object.assign({}, state, {
 			addingError: true
 		});
-	case LOG_OUT:
+	case LOG_IN:
 		return Object.assign({}, state, {
-			loggedIn: false
+			loggedIn: true
 		});
+	case LOG_OUT:
+		return Object.assign({}, state, initialState);
 	default:
 		return state;
 	}

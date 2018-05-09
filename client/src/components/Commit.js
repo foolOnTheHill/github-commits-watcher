@@ -25,7 +25,7 @@ const Commit = ({ login, commit, onClick }) => {
 				<div className="card-body">
 					<h5 className="card-title">{author}</h5>
 					<p className="card-text">{message}</p>
-					<a className="btn btn-primary" onClick={handleClick}>{repository.name}</a>
+					<button className="btn btn-primary" onClick={handleClick}>{repository.name}</button>
 				</div>
 			</div>
 		</div>

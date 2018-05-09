@@ -1,9 +1,14 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Loading from './Loading';
 
-export default class LoginRedirect extends Component {
+import { logIn } from '../actions';
+
+import { TOKEN_LOCATION } from '../config';
+
+class LoginRedirect extends Component {
 
 	constructor(props) {
 		super(props);
@@ -31,13 +36,14 @@ export default class LoginRedirect extends Component {
 		}).then(res => {
 			return res.json();
 		}).then(data => {
-			localStorage.setItem('github-app-token', JSON.stringify(data));
-			this.setState({logged : true});
+			this.props.dispatch(logIn());
+			localStorage.setItem(TOKEN_LOCATION, JSON.stringify(data));
+			this.setState({logged: true});
 		});
 	}
 
 	render() {
-		if (this.state.logged) {
+		if (this.state.logged) {	
 			return <Redirect to="/app" />;
 		} else {
 			return <Loading />;
@@ -45,3 +51,11 @@ export default class LoginRedirect extends Component {
 	}
 
 }
+
+const mapStateToProps = (state) => {
+	return {
+		loggedIn: state.loggedIn
+	};
+};
+
+export default connect(mapStateToProps)(LoginRedirect);

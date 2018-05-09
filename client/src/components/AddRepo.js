@@ -38,7 +38,7 @@ export default class AddRepo extends Component {
 			<div className="container">
 				<div className="row justify-content-center">
 					<div className="col-8">
-						<p>Type a repo full name and hit 'List!' to start listing commits:</p>
+						<p>Type the repo full name:</p>
 
 						<div>
 							<div className="form-group">
@@ -50,7 +50,10 @@ export default class AddRepo extends Component {
 									defaultValue={this.props.value}
 									onKeyUp={this.handleKeyUp} />
 							</div>
-							<button className="btn btn-primary" onClick={this.handleGoClick}>List!</button>
+							<button className="btn btn-primary" onClick={this.handleGoClick}>
+								<i className="fa fa-plus" aria-hidden="true"></i>
+								Add Repository
+							</button>
 						</div>
 					</div>
 				</div>

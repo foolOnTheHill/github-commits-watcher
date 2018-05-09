@@ -59,32 +59,35 @@ router.post('/repositories', function (req, res, next) {
 
 		var access_token = token.access_token;
 
-		return api.checkRepositoryExists(owner, repository).then(function (exists) {
+		return find.checkRepositoryExists(login, repository).then(function (exists) {
 			if (exists) {
 				res.status(200).end();
+				return;
+			} else {
+				return Promise.all([api.getRepoInfo(access_token, owner, repository), api.getRepoLastMonthCommits(access_token, owner, repository)]).then(function (_ref) {
+					var _ref2 = _slicedToArray(_ref, 2),
+					    repoInfo = _ref2[0],
+					    commits = _ref2[1];
+
+					var description = repoInfo.description,
+					    created_date = repoInfo.created_date;
+
+
+					return create.newRepository(login, repository, description, created_date).then(function () {
+						return Promise.all(commits.map(function (commit) {
+							return create.newCommit(login, repository, commit.date, commit.message, commit.author, commit.hash);
+						}));
+					});
+				}).then(function () {
+					res.status(200).end();
+				}).catch(function (error) {
+					console.error(error);
+					next(new errors.InternalServerError(error));
+				});
 			}
-		}).then(function () {
-			return Promise.all([api.getRepoInfo(access_token, owner, repository), api.getRepoLastMonthCommits(access_token, owner, repository)]);
-		}).then(function (_ref) {
-			var _ref2 = _slicedToArray(_ref, 2),
-			    repoInfo = _ref2[0],
-			    commits = _ref2[1];
-
-			var description = repoInfo.description,
-			    created_date = repoInfo.created_date;
-
-
-			return create.newRepository(login, repository, description, created_date).then(function () {
-				return Promise.all(commits.map(function (commit) {
-					return create.newCommit(login, repository, commit.date, commit.message, commit.author, commit.hash);
-				}));
-			});
-		}).then(function () {
-			res.status(200).end();
-		}).catch(function (error) {
-			next(new errors.InternalServerError(error));
 		});
 	}).catch(function (error) {
+		console.error(error);
 		next(new errors.UnauthorizedError(error));
 	});
 });
