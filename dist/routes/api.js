@@ -79,6 +79,8 @@ router.post('/repositories', function (req, res, next) {
 						}));
 					});
 				}).then(function () {
+					return api.createHook(access_token, owner, repository);
+				}).then(function () {
 					res.status(200).end();
 				}).catch(function (error) {
 					console.error(error);

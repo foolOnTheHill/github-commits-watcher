@@ -6,6 +6,8 @@ var lastMonth = require('../utils/last-month');
 
 var ENDPOINTS = require('../utils/endpoints');
 
+var config = require('../config/config');
+
 var getUserProfile = function getUserProfile(token) {
 	return request('GET', ENDPOINTS.profile, token).then(function (data) {
 		var login = data.login,
@@ -72,8 +74,26 @@ var getRepoLastMonthCommits = function getRepoLastMonthCommits(token, owner, rep
 	});
 };
 
+var createHook = function createHook(token, owner, repo_name) {
+	var endpoint = ENDPOINTS.repository + '/' + owner + '/' + repo_name + '/hooks';
+	var body = {
+		name: 'web',
+		active: true,
+		events: ['push'],
+		config: {
+			url: config.APP_URL + '/hook',
+			content_type: 'json'
+		}
+	};
+
+	return request('POST', endpoint, token, {}, body).catch(function (error) {
+		console.error(error);
+	});
+};
+
 module.exports = {
 	getUserProfile: getUserProfile,
 	getRepoInfo: getRepoInfo,
-	getRepoLastMonthCommits: getRepoLastMonthCommits
+	getRepoLastMonthCommits: getRepoLastMonthCommits,
+	createHook: createHook
 };
