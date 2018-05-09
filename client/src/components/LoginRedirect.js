@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Loading from './Loading';
 
-import { logIn, loadRepos } from '../actions';
+import { logIn } from '../actions';
 
 import { TOKEN_LOCATION } from '../config';
 
@@ -38,7 +38,6 @@ class LoginRedirect extends Component {
 		}).then(data => {
 			localStorage.setItem(TOKEN_LOCATION, JSON.stringify(data));
 			this.props.dispatch(logIn());
-			this.props.dispatch(loadRepos());
 			this.setState({logged: true});
 		});
 	}
