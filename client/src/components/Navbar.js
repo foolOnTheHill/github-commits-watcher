@@ -8,7 +8,7 @@ const Navbar = ({ user, handleClick }) => {
 			<div className="collapse navbar-collapse" id="navbarText">
 				<ul className="navbar-nav mr-auto">
 					<li className="nav-item active">
-						{user.login}
+						{user.login || 'Guest'}
 					</li>
 				</ul>
 				<span className="navbar-text">

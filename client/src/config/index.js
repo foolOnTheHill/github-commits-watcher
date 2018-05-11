@@ -1,3 +1,3 @@
 module.exports = {
-	TOKEN_LOCATION: process.env.TOKEN_LOCATION
+	TOKEN_LOCATION: 'github-app-token'
 };

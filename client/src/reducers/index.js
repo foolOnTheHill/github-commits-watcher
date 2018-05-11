@@ -15,6 +15,8 @@ import {
 
 const initialState = {
 	loggedIn: false,
+	loginError: false,
+	loggedOut: false,
 	addingRepo: false,
 	addingError: false,
 	fetchingRepos: false,
@@ -60,6 +62,9 @@ const commits = (
 };
 
 const rootReducer = (state = initialState, action) => {
+	console.log(state);
+	console.log(action);
+
 	switch (action.type) {
 	case FETCHING_REPOS:
 		return Object.assign({}, state, {
@@ -101,10 +106,13 @@ const rootReducer = (state = initialState, action) => {
 		});
 	case LOG_IN:
 		return Object.assign({}, state, {
-			loggedIn: true
+			loggedIn: true,
+			loginError: false
 		});
 	case LOG_OUT:
-		return Object.assign({}, state, initialState);
+		return Object.assign({}, state, {
+			loggedOut: true
+		});
 	default:
 		return state;
 	}

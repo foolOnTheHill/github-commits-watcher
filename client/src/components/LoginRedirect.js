@@ -1,10 +1,7 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
 import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import Loading from './Loading';
-
-import { logIn } from '../actions';
 
 import { TOKEN_LOCATION } from '../config';
 
@@ -14,7 +11,7 @@ class LoginRedirect extends Component {
 		super(props);
 
 		this.state = {
-			logged : false
+			loggedIn : false
 		};
 	}
 
@@ -37,13 +34,12 @@ class LoginRedirect extends Component {
 			return res.json();
 		}).then(data => {
 			localStorage.setItem(TOKEN_LOCATION, JSON.stringify(data));
-			this.props.dispatch(logIn());
-			this.setState({logged: true});
+			this.setState({ loggedIn : true });
 		});
 	}
 
 	render() {
-		if (this.state.logged) {
+		if (this.state.loggedIn) {
 			return <Redirect to="/app" />;
 		} else {
 			return <Loading />;
@@ -52,10 +48,4 @@ class LoginRedirect extends Component {
 
 }
 
-const mapStateToProps = (state) => {
-	return {
-		loggedIn: state.loggedIn
-	};
-};
-
-export default connect(mapStateToProps)(LoginRedirect);
+export default LoginRedirect;

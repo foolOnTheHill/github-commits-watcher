@@ -1,5 +1,4 @@
 import React, { Component } from 'react'; // eslint-disable-line no-unused-vars
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Redirect } from 'react-router-dom';
@@ -7,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import {
 	addRepo,
 	selectRepo,
+	makeLogIn,
 	logOut,
 	fetchCommitsIfNeeded
 } from '../actions';
@@ -32,24 +32,19 @@ class App extends Component {
 		this.handleLogout = this.handleLogout.bind(this);
 	}
 
-	componentDidMount() {
+	componentDidUpdate(prevProps) {
 		const { dispatch, selectedRepo } = this.props;
 
-		dispatch(fetchCommitsIfNeeded(selectedRepo));
-		dispatch(selectRepo(selectedRepo));
-	}
+		const changeSelectedRepo = this.props.selectedRepo !== prevProps.selectedRepo;
+		const loadedAllRepos = !this.props.fetchingRepos && prevProps.fetchingRepos;
 
-	componentDidUpdate(prevProps) {
-		if (this.props.selectedRepo !== prevProps.selectedRepo) {
-			const { dispatch, selectedRepo } = this.props;
-
+		if (changeSelectedRepo || loadedAllRepos) {
 			dispatch(fetchCommitsIfNeeded(selectedRepo));
 			dispatch(selectRepo(selectedRepo));
 		}
 	}
 
 	handleLogout() {
-		deleteToken();
 		this.props.dispatch(logOut());
 	}
 
@@ -62,11 +57,26 @@ class App extends Component {
 		this.props.dispatch(addRepo(repo));
 	}
 
+	renderLoggedOut() {
+		return <Redirect to="/" />;
+	}
+
+	renderLoginError() {
+		return <Error message={'Login Error'} />;
+	}
+
 	renderLoggedIn() {
-		const { commits, selectedRepo, isFetching, loadError, addingRepo, addingError } = this.props;
+		const {
+			commits,
+			selectedRepo,
+			isFetching,
+			fetchingRepos,
+			loadError,
+			addingRepo,
+			addingError } = this.props;
 
 		let child;
-		if (isFetching || addingRepo) {
+		if (isFetching || addingRepo || fetchingRepos) {
 			child = <Loading />;
 		} else if (loadError) {
 			child = <Error message={'Error while loading data'} />;
@@ -92,34 +102,20 @@ class App extends Component {
 		);
 	}
 
-	renderRedirect() {
-		return <Redirect to="/" />;
-	}
-
 	render() {
-		if (this.props.loggedIn) {
+		if (this.props.loginError) {
+			return this.renderLoginError();
+		} else if (this.props.loggedOut) {
+			deleteToken();
+			return this.renderLoggedOut();
+		} else if (this.props.loggedIn) {
 			return this.renderLoggedIn();
 		} else {
-			return this.renderRedirect();
+			this.props.dispatch(makeLogIn());
+			return <Loading />;
 		}
 	}
 }
-
-App.propTypes = {
-	isFetching : PropTypes.bool.isRequired,
-	commits: PropTypes.arrayOf(PropTypes.shape({
-		hash: PropTypes.string.isRequired,
-		message: PropTypes.string.isRequired,
-		author: PropTypes.string.isRequired,
-		date: PropTypes.string.isRequired,
-		repository: PropTypes.shape({
-			name: PropTypes.string.isRequired,
-			description: PropTypes.string.isRequired,
-			created_date: PropTypes.string.isRequired,
-			owner: PropTypes.string.isRequired
-		})
-	})).isRequired
-};
 
 const mapStateToProps = (state) => {
 	const fetchingRepos = state.fetchingRepos;
@@ -132,6 +128,8 @@ const mapStateToProps = (state) => {
 	const commitsByRepo = state.commitsByRepo;
 
 	const loggedIn = state.loggedIn;
+	const loginError = state.loginError;
+	const loggedOut = state.loggedOut;
 
 	const repoCommits = commitsByRepo[selectedRepo] || { isFetching: false, loadError: false, commits: []};
 
@@ -142,6 +140,8 @@ const mapStateToProps = (state) => {
 		errorFetchingRepos,
 		repositories,
 		loggedIn,
+		loginError,
+		loggedOut,
 		addingRepo,
 		addingError,
 		selectedRepo,
