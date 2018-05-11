@@ -21,7 +21,7 @@ const prepareOptions = (token, uri, method, qs, body) => {
 	};
 };
 
-module.exports = (method='GET', endpoint, token, qs={}, body={}) => {
+module.exports = (method, endpoint, token, qs={}, body={}) => {
 	const url = prepareURL(endpoint);
 	const options = prepareOptions(token, url, method, qs, body);
 

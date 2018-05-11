@@ -20,7 +20,8 @@ const githubOAuth = require('github-oauth')({
 	githubSecret: config.GITHUB_SECRET,
 	baseURL: config.APP_URL,
 	loginURI: '/',
-	callbackURI: '/login/redirect'
+	callbackURI: '/login/redirect',
+	scope: 'user admin:repo_hook'
 });
 
 router.get('/', (req, res) => {

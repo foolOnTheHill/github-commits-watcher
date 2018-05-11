@@ -23,10 +23,7 @@ var prepareOptions = function prepareOptions(token, uri, method, qs, body) {
 	};
 };
 
-module.exports = function () {
-	var method = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'GET';
-	var endpoint = arguments[1];
-	var token = arguments[2];
+module.exports = function (method, endpoint, token) {
 	var qs = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	var body = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
 
