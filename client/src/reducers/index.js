@@ -62,9 +62,6 @@ const commits = (
 };
 
 const rootReducer = (state = initialState, action) => {
-	console.log(state);
-	console.log(action);
-
 	switch (action.type) {
 	case FETCHING_REPOS:
 		return Object.assign({}, state, {
