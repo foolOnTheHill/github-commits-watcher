@@ -89,6 +89,8 @@ router.get('/repositories/:repository/commits', (req, res, next) => {
 		const repository = req.params.repository;
 
 		find.findRepositoryCommits(owner, repository).then(commits => {
+			return sortCommits(commits);
+		}).then(commits => {
 			res.send(commits);
 		}).catch(err => {
 			next(new errors.InternalServerError(err));

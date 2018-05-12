@@ -110,6 +110,8 @@ router.get('/repositories/:repository/commits', function (req, res, next) {
 		var repository = req.params.repository;
 
 		find.findRepositoryCommits(owner, repository).then(function (commits) {
+			return sortCommits(commits);
+		}).then(function (commits) {
 			res.send(commits);
 		}).catch(function (err) {
 			next(new errors.InternalServerError(err));
