@@ -10,6 +10,8 @@ const api = require('../utils/github-api');
 const create = require('../database/dal/create');
 const find = require('../database/dal/find');
 
+const sortCommits = require('../utils/sortCommits');
+
 router.get('/commits', (req, res, next) => {
 	const token_param = req.query.token;
 
@@ -19,6 +21,8 @@ router.get('/commits', (req, res, next) => {
 		const login = token.login;
 
 		find.findUserCommits(login).then(commits => {
+			return sortCommits(commits);
+		}).then(commits => {
 			res.send(commits);
 		}).catch(err => {
 			next(new errors.InternalServerError(err));
