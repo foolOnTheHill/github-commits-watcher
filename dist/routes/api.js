@@ -31,9 +31,11 @@ router.get('/commits', function (req, res, next) {
 		}).then(function (commits) {
 			res.send(commits);
 		}).catch(function (err) {
+			console.error(err);
 			next(new errors.InternalServerError(err));
 		});
 	}).catch(function (err) {
+		console.error(err);
 		next(new errors.UnauthorizedError(err));
 	});
 });
@@ -114,9 +116,11 @@ router.get('/repositories/:repository/commits', function (req, res, next) {
 		}).then(function (commits) {
 			res.send(commits);
 		}).catch(function (err) {
+			console.error(err);
 			next(new errors.InternalServerError(err));
 		});
 	}).catch(function (err) {
+		console.error(err);
 		next(new errors.UnauthorizedError(err));
 	});
 });
@@ -137,6 +141,7 @@ router.get('/repositories', function (req, res, next) {
 			next(new errors.InternalServerError(err));
 		});
 	}).catch(function (err) {
+		console.error(err);
 		next(new errors.UnauthorizedError(err));
 	});
 });
